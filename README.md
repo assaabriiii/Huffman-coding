@@ -26,6 +26,7 @@ To run the code, execute the `main()` function.
 ```python
 if __name__ == '__main__':
     main()
+```
 
 
 ## Contact Information
