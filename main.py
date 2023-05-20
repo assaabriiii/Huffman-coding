@@ -1,7 +1,9 @@
+import heapq
+from collections import defaultdict
 import time
 import colorama
 from colorama import Fore, Style
-from art import *  
+from art import *
 
 colorama.init(autoreset=True)
 
@@ -57,7 +59,8 @@ def animate_decoding(decoded_string):
 
 
 def main():
-    string = 'سلام'
+    string = str(input("Enter your input: "))
+
 
     class NodeTree(object):
         def __init__(self, left=None, right=None):
@@ -79,12 +82,12 @@ def main():
         (l, r) = node.children()
         encoded_string = ''
         d = dict()
-        encoded_l, codes_l = huffman_code_tree(l, binString + '0')
-        encoded_string += encoded_l
-        d.update(codes_l)
-        encoded_r, codes_r = huffman_code_tree(r, binString + '1')
+        encoded_r, codes_r = huffman_code_tree(r, binString + '1')  # Switched order for left and right subtrees
         encoded_string += encoded_r
         d.update(codes_r)
+        encoded_l, codes_l = huffman_code_tree(l, binString + '0')  # Switched order for left and right subtrees
+        encoded_string += encoded_l
+        d.update(codes_l)
         return encoded_string, d
 
     freq = {}
@@ -94,18 +97,18 @@ def main():
         else:
             freq[c] = 1
 
-    freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+    freq = sorted(freq.items(), key=lambda x: x[1])
 
     nodes = freq
 
     while len(nodes) > 1:
-        (key1, c1) = nodes[-1]
-        (key2, c2) = nodes[-2]
-        nodes = nodes[:-2]
+        (key1, c1) = nodes[0]
+        (key2, c2) = nodes[1]
+        nodes = nodes[2:]
         node = NodeTree(key1, key2)
         nodes.append((node, c1 + c2))
 
-        nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
+        nodes = sorted(nodes, key=lambda x: x[1])
 
     encoded_string, huffmanCode = huffman_code_tree(nodes[0][0])
 
@@ -139,3 +142,87 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# Huffman code implementation starts here
+
+# to map each character to its Huffman value
+codes = {}
+
+# To store the frequency of each character in the input data
+freq = defaultdict(int)
+
+# A Huffman tree node
+class MinHeapNode:
+    def __init__(self, data, freq):
+        self.left = None
+        self.right = None
+        self.data = data
+        self.freq = freq
+
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+# utility function to print characters along with their Huffman value
+def printCodes(root, string):
+    if root is None:
+        return
+    if root.data != '$':
+        print(root.data, ":", string)
+    printCodes(root.left, string + "0")
+    printCodes(root.right, string + "1")
+
+# utility function to store characters along with their Huffman value in a hash table
+def storeCodes(root, string):
+    if root is None:
+        return
+    if root.data != '$':
+        codes[root.data] = string
+    storeCodes(root.left, string + "0")
+    storeCodes(root.right, string + "1")
+
+# function to build the Huffman tree and store it in minHeap
+def HuffmanCodes(size):
+    minHeap = []
+    for key in freq:
+        minHeap.append(MinHeapNode(key, freq[key]))
+    heapq.heapify(minHeap)
+    while len(minHeap) != 1:
+        left = heapq.heappop(minHeap)
+        right = heapq.heappop(minHeap)
+        top = MinHeapNode('$', left.freq + right.freq)
+        top.left = left
+        top.right = right
+        heapq.heappush(minHeap, top)
+    storeCodes(minHeap[0], "")
+
+# utility function to store the frequency of each character in the input string
+def calcFreq(string, n):
+    for i in range(n):
+        freq[string[i]] += 1
+
+# function to iterate through the encoded string s
+# if s[i]=='1', then move to node->right
+# if s[i]=='0', then move to node->left
+# if leaf node, append the node->data to our output string
+def decode_file(root, s):
+    ans = ""
+    curr = root
+    n = len(s)
+    for i in range(n):
+        if s[i] == '0':
+            curr = curr.left
+        else:
+            curr = curr.right
+
+        # reached leaf node
+        if curr.left is None and curr.right is None:
+            ans += curr.data
+            curr = root
+    return ans + '\0'
+
+
+# Driver code
+if __name__ == "__main__":
+    string = str(input("Enter your input: "))
+    calcFreq(string, len(string))
