@@ -2,6 +2,16 @@
 
 This code demonstrates Huffman encoding and decoding for a given string.
 
+## Preview
+
+### Terminal Output
+
+![Terminal Output](media/../media%20/terminal.png)
+
+### Huffman Tree
+
+![Huffman Tree](media/../media%20/tree.png)
+
 ## Introduction
 
 The Huffman coding algorithm is a popular method for lossless data compression. It assigns variable-length codes to input characters based on their frequencies, with the more frequent characters having shorter codes. This allows for efficient encoding and decoding of data.
