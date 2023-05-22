@@ -1,0 +1,4 @@
+heapq==1.0
+colorama==0.4.4
+tkinter==8.6
+art==5.2
