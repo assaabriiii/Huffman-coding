@@ -105,29 +105,101 @@ def decode_file(root, s):
 	return ans + '\0'
 
 
+def compare_with_ascii(input_str: str, huffman: str):
+    ascii_code = ""
+    for char in input_str:
+        ascii_code += str(ord(char)) + " "
+    print(f"\n{Fore.YELLOW}ASCII Code of the String:{Style.RESET_ALL}")
+    print(ascii_code)
+    
+    print(f"\n{Fore.YELLOW}HUFFMAN Code of the String:{Style.RESET_ALL}")
+    print(huffman)
+
+
+def calculate_compression_ratio(input_str, encoded_str):
+    input_size = len(input_str) * 8  # Size of input string in bits
+    encoded_size = len(encoded_str)  # Size of encoded string in bits
+    compression_ratio = (input_size - encoded_size) / input_size
+    return compression_ratio
+
+
+def visualize_frequency_distribution(input_str):
+    frequency = defaultdict(int)
+    for char in input_str:
+        frequency[char] += 1
+
+    print(f"\n{Fore.YELLOW}Frequency Distribution:{Style.RESET_ALL}")
+    for key in sorted(frequency):
+        print(f"{Fore.GREEN}{key}{Style.RESET_ALL}: {frequency[key]}")
+
+    # Bar chart visualization
+    import matplotlib.pyplot as plt
+
+    plt.bar(frequency.keys(), frequency.values())
+    plt.xlabel("Characters")
+    plt.ylabel("Frequency")
+    plt.title("Frequency Distribution")
+    plt.show()
+
+
+def efficiency_comparison(input_str):
+    import sys
+    import zlib
+    from collections import Counter
+
+    # Huffman Encoding
+    encoded_string = ""
+    calcFreq(input_str, len(input_str))
+    HuffmanCodes(len(input_str))
+    for char in input_str:
+        encoded_string += codes[char]
+
+    # Run-Length Encoding (RLE)
+    def rle_encode(input_str):
+        encoded = ""
+        count = 1
+        for i in range(1, len(input_str)):
+            if input_str[i] == input_str[i - 1]:
+                count += 1
+            else:
+                encoded += input_str[i - 1] + str(count)
+                count = 1
+        encoded += input_str[-1] + str(count)
+        return encoded
+
+    rle_encoded_string = rle_encode(input_str)
+
+
+
+
 if __name__ == "__main__":
-	tprint("Huffman", font="random")
-	minHeap = []
-	str = "Hello world"
-	encodedString, decodedString = "", ""
-	calcFreq(str, len(str))
-	HuffmanCodes(len(str))
-	print(f"{Fore.CYAN}Character With their Frequencies:{Style.RESET_ALL}")
-	for key in sorted(codes):
-		print(f"{Fore.GREEN}{key}{Style.RESET_ALL}: {codes[key]}")
+    tprint("Huffman", font="random")
+    minHeap = []
+    string = "Hello world"
+    encodedString, decodedString = "", ""
+    calcFreq(string, len(string))
+    HuffmanCodes(len(string))
+    print(f"{Fore.CYAN}Character With their Frequencies:{Style.RESET_ALL}")
+    for key in sorted(codes):
+        print(f"{Fore.GREEN}{key}{Style.RESET_ALL}: {codes[key]}")
 
-	for i in str:
-		encodedString += codes[i]
+    for i in string:
+        encodedString += codes[i]
 
-	print(f"\n{Fore.YELLOW}Encoded Huffman data:{Style.RESET_ALL}")
-	print(encodedString)
+    print(f"\n{Fore.YELLOW}Encoded Huffman Data:{Style.RESET_ALL}")
+    print(encodedString)
 
-	decodedString = decode_file(minHeap[0], encodedString)
-	print(f"\n{Fore.YELLOW}Decoded Huffman Data:{Style.RESET_ALL}")
-	print(decodedString)
+    decodedString = decode_file(minHeap[0], encodedString)
+    print(f"\n{Fore.YELLOW}Decoded Huffman Data:{Style.RESET_ALL}")
+    print(decodedString)
 
-	
-	dx = 200  
-	draw_tree(minHeap[0], 400, 50, dx)
+    dx = 200
+    draw_tree(minHeap[0], 400, 50, dx)
 
-	window.mainloop()
+    compare_with_ascii(string, encodedString)
+    compression_ratio = calculate_compression_ratio(string, encodedString)
+    print(f"\n{Fore.YELLOW}Compression Ratio:{Style.RESET_ALL}")
+    print(f"{compression_ratio * 100:.2f}%")
+
+
+    window.mainloop()
