@@ -146,14 +146,12 @@ def efficiency_comparison(input_str):
     import zlib
     from collections import Counter
 
-    # Huffman Encoding
     encoded_string = ""
     calcFreq(input_str, len(input_str))
     HuffmanCodes(len(input_str))
     for char in input_str:
         encoded_string += codes[char]
 
-    # Run-Length Encoding (RLE)
     def rle_encode(input_str):
         encoded = ""
         count = 1
@@ -168,7 +166,6 @@ def efficiency_comparison(input_str):
 
     rle_encoded_string = rle_encode(input_str)
 
-    # Lempel-Ziv-Welch (LZW) Compression
     def lzw_compress(input_str):
         dictionary = {chr(i): i for i in range(256)}
         next_code = 256
@@ -205,24 +202,27 @@ def efficiency_comparison(input_str):
 
 
 def compress_file(file_path):
-    # Read file content
     with open(file_path, 'r') as file:
         input_str = file.read().replace('\n', '')
 
-    # Huffman Encoding
     encoded_string = ""
     calcFreq(input_str, len(input_str))
     HuffmanCodes(len(input_str))
     for char in input_str:
         encoded_string += codes[char]
 
-    # Write compressed content to file
     compressed_file_path = file_path + '.compressed'
     with open(compressed_file_path, 'w') as file:
         file.write(encoded_string)
 
     print(f"\n{Fore.GREEN}File compressed successfully. Compressed file: {compressed_file_path}{Style.RESET_ALL}")
 
+
+def calculate_compression_ratio(input_str, encoded_str):
+    input_size = len(input_str) * 8  
+    encoded_size = len(encoded_str)  
+    compression_ratio = (input_size - encoded_size) / input_size
+    return compression_ratio
 
 if __name__ == "__main__":
     tprint("Huffman", font="random")
@@ -244,6 +244,10 @@ if __name__ == "__main__":
     decodedString = decode_file(minHeap[0], encodedString)
     print(f"\n{Fore.YELLOW}Decoded Huffman Data:{Style.RESET_ALL}")
     print(decodedString)
+    
+    compression_ratio = calculate_compression_ratio(input_str, encodedString)
+    print(f"\n{Fore.YELLOW}Compression Ratio:{Style.RESET_ALL}")
+    print(f"{compression_ratio * 100:.2f}%")
 
     dx = 200
     draw_tree(minHeap[0], 400, 50, dx)
@@ -251,7 +255,7 @@ if __name__ == "__main__":
     compare_with_ascii(input_str)
     visualize_frequency_distribution(input_str)
     efficiency_comparison(input_str)
-
+    
     compress_file("file.txt")
 
     window.mainloop()
