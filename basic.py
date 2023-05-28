@@ -1,4 +1,3 @@
-import heapq
 from collections import defaultdict
 import tkinter as tk
 import colorama
@@ -7,11 +6,7 @@ from art import *
 
 colorama.init()
 
-window = tk.Tk()
-window.title("Huffman Tree")
 
-canvas = tk.Canvas(window, width=800, height=600)
-canvas.pack()
 
 
 def draw_tree(node, x, y, dx):
@@ -34,8 +29,7 @@ def draw_tree(node, x, y, dx):
         draw_tree(node.right, x_right, y_right, dx // 2)
 
 
-codes = {}
-freq = defaultdict(int)
+
 
 
 class MinHeapNode:
@@ -67,18 +61,68 @@ def storeCodes(root, code_str):
     storeCodes(root.right, code_str + "1")
 
 
+def _siftdown(heap, startpos, pos):
+    newitem = heap[pos]
+    while pos > startpos:
+        parentpos = (pos - 1) >> 1
+        parent = heap[parentpos]
+        if newitem < parent:
+            heap[pos] = parent
+            pos = parentpos
+            continue
+        break
+    heap[pos] = newitem
+
+
+def _siftup(heap, pos):
+    endpos = len(heap)
+    startpos = pos
+    newitem = heap[pos]
+    childpos = 2*pos + 1    
+    while childpos < endpos:
+        rightpos = childpos + 1
+        if rightpos < endpos and not heap[childpos] < heap[rightpos]:
+            childpos = rightpos
+        heap[pos] = heap[childpos]
+        pos = childpos
+        childpos = 2*pos + 1
+    heap[pos] = newitem
+    _siftdown(heap, startpos, pos)
+
+
+def heappop(heap):
+    lastelt = heap.pop()    
+    if heap:
+        returnitem = heap[0]
+        heap[0] = lastelt
+        _siftup(heap, 0)
+        return returnitem
+    return lastelt
+
+def heapify(x):
+    n = len(x)
+    for i in reversed(range(n//2)):
+        _siftup(x, i)
+
+        
+def heappush(heap, item):
+    """Push item onto heap, maintaining the heap invariant."""
+    heap.append(item)
+    _siftdown(heap, 0, len(heap)-1)
+
+
 def HuffmanCodes(size):
     global minHeap
     for key in freq:
         minHeap.append(MinHeapNode(key, freq[key]))
-    heapq.heapify(minHeap)
+    heapify(minHeap)
     while len(minHeap) != 1:
-        left = heapq.heappop(minHeap)
-        right = heapq.heappop(minHeap)
+        left = heappop(minHeap)
+        right = heappop(minHeap)
         top = MinHeapNode('$', left.freq + right.freq)
         top.left = left
         top.right = right
-        heapq.heappush(minHeap, top)
+        heappush(minHeap, top)
     storeCodes(minHeap[0], "")
 
 
@@ -224,10 +268,21 @@ def calculate_compression_ratio(input_str, encoded_str):
     compression_ratio = (input_size - encoded_size) / input_size
     return compression_ratio
 
-if __name__ == "__main__":
+while True:
+    codes = {}
+    freq = defaultdict(int) 
+    window = tk.Tk()
+    window.title("Huffman Tree")
+
+    canvas = tk.Canvas(window, width=800, height=600)
+    canvas.pack()
     tprint("Huffman", font="random")
+    input_str = input("Enter your string (print 'exit' to quit): ")
+    
+    if input_str.lower() == "exit": 
+        exit()
+        
     minHeap = []
-    input_str = "Hello world"
     encodedString, decodedString = "", ""
     calcFreq(input_str, len(input_str))
     HuffmanCodes(len(input_str))
@@ -259,3 +314,5 @@ if __name__ == "__main__":
     compress_file("file.txt")
 
     window.mainloop()
+    minHeap = []
+    print(minHeap)
