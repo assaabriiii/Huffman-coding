@@ -45,4 +45,4 @@ If you have any questions or suggestions regarding this code, feel free to reach
 
 - Twitter: [@0x27752357](https://twitter.com/0x27752357)
 
-I'm available to discuss any aspects related to Huffman encoding and decoding, as well as any other topics you'd like to explore.
+I'm not available to discuss any aspects related to Huffman encoding and decoding or etc topics.
