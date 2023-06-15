@@ -8,14 +8,16 @@ colorama.init()
 
 
 
-
+# Function to draw the Huffman tree on a tkinter canvas
 def draw_tree(node, x, y, dx):
     if node is None:
         return
-
+    
+    # Draw a circle for the current node
     canvas.create_oval(x - 20, y - 20, x + 20, y + 20, fill="white")
     canvas.create_text(x, y, text=f"{node.data}\n{node.freq}", font="Arial 12 bold")
-
+    
+    # Recursively draw the left and right subtrees
     if node.left is not None:
         x_left = x - dx
         y_left = y + 80
@@ -31,7 +33,7 @@ def draw_tree(node, x, y, dx):
 
 
 
-
+# Class representing a node in the Huffman tree
 class MinHeapNode:
     def __init__(self, data, freq):
         self.left = None
@@ -41,8 +43,8 @@ class MinHeapNode:
 
     def __lt__(self, other):
         return self.freq < other.freq
-
-
+    
+# Function to print the Huffman codes for each character
 def printCodes(root, code_str):
     if root is None:
         return
@@ -52,6 +54,7 @@ def printCodes(root, code_str):
     printCodes(root.right, code_str + "1")
 
 
+# Function to store the Huffman codes for each character
 def storeCodes(root, code_str):
     if root is None:
         return
@@ -60,7 +63,7 @@ def storeCodes(root, code_str):
     storeCodes(root.left, code_str + "0")
     storeCodes(root.right, code_str + "1")
 
-
+# Heap operations
 def _siftdown(heap, startpos, pos):
     newitem = heap[pos]
     while pos > startpos:
@@ -73,7 +76,7 @@ def _siftdown(heap, startpos, pos):
         break
     heap[pos] = newitem
 
-
+# Heap operations
 def _siftup(heap, pos):
     endpos = len(heap)
     startpos = pos
@@ -89,7 +92,7 @@ def _siftup(heap, pos):
     heap[pos] = newitem
     _siftdown(heap, startpos, pos)
 
-
+# Heap operations
 def heappop(heap):
     lastelt = heap.pop()    
     if heap:
@@ -99,18 +102,20 @@ def heappop(heap):
         return returnitem
     return lastelt
 
+# Heap operations
 def heapify(x):
     n = len(x)
     for i in reversed(range(n//2)):
         _siftup(x, i)
 
-        
+# Heap operations   
 def heappush(heap, item):
     """Push item onto heap, maintaining the heap invariant."""
     heap.append(item)
     _siftdown(heap, 0, len(heap)-1)
 
 
+# Function to calculate the Huffman codes for the input characters
 def HuffmanCodes(size):
     global minHeap
     for key in freq:
@@ -126,11 +131,13 @@ def HuffmanCodes(size):
     storeCodes(minHeap[0], "")
 
 
+# Function to calculate the frequency of characters in the input string
 def calcFreq(input_str, n):
     for i in range(n):
         freq[input_str[i]] += 1
 
 
+# Function to decode a Huffman-encoded string using the Huffman tree
 def decode_file(root, s):
     ans = ""
     curr = root
@@ -147,6 +154,7 @@ def decode_file(root, s):
     return ans + '\0'
 
 
+# Function to compare the Huffman codes with ASCII codes
 def compare_with_ascii(input_str):
     ascii_code = ""
     for char in input_str:
@@ -166,6 +174,7 @@ def compare_with_ascii(input_str):
         print(f"\n{Fore.RED}Huffman Code does not match ASCII Code.{Style.RESET_ALL}")
 
 
+# Function to visualize the frequency distribution of characters in the input string
 def visualize_frequency_distribution(input_str):
     frequency = defaultdict(int)
     for char in input_str:
@@ -185,6 +194,7 @@ def visualize_frequency_distribution(input_str):
     plt.show()
 
 
+# Function to compare the efficiency of different compression methods
 def efficiency_comparison(input_str):
     import sys
     import zlib
@@ -245,7 +255,10 @@ def efficiency_comparison(input_str):
     print(f"Zlib Compressed Size: {zlib_size} bytes")
 
 
+# Function to compress a file using Huffman coding
 def compress_file(file_path):
+    
+    # Huffman coding and compression
     with open(file_path, 'r') as file:
         input_str = file.read().replace('\n', '')
 
@@ -262,13 +275,17 @@ def compress_file(file_path):
     print(f"\n{Fore.GREEN}File compressed successfully. Compressed file: {compressed_file_path}{Style.RESET_ALL}")
 
 
+# Function to calculate the compression ratio for a Huffman-encoded string
 def calculate_compression_ratio(input_str, encoded_str):
     input_size = len(input_str) * 8  
     encoded_size = len(encoded_str)  
     compression_ratio = (input_size - encoded_size) / input_size
     return compression_ratio
 
-while True:
+# Main program loop
+flag = 1 
+while flag == 1:
+    # Initialize variables
     codes = {}
     freq = defaultdict(int) 
     window = tk.Tk()
@@ -316,3 +333,156 @@ while True:
     window.mainloop()
     minHeap = []
     print(minHeap)
+
+
+
+while flag == 0 : 
+    
+    
+    persian_words = [
+    "سلام",
+    "خداحافظ",
+    "ممنون",
+    "بله",
+    "نه",
+    "ببخشید",
+    "متشکرم",
+    "بفرمایید",
+    "لطفاً",
+    "کجا",
+    "چطور",
+    "کی",
+    "چرا",
+    "چه",
+    "اینجا",
+    "آنجا",
+    "الان",
+    "فقط",
+    "همین",
+    "همه",
+    "کار",
+    "زندگی",
+    "عشق",
+    "دوست",
+    "خوشحال",
+    "ناراحت",
+    "ترس",
+    "آب",
+    "آتش",
+    "هوا",
+    "خوراک",
+    "شراب",
+    "خواب",
+    "عکس",
+    "کتاب",
+    "مدرسه",
+    "دانشگاه",
+    "کامپیوتر",
+    "تلویزیون",
+    "موبایل",
+    "ماشین",
+    "خانه",
+    "خیابان",
+    "شهر",
+    "روستا",
+    "دریا",
+    "کوه",
+    "جنگل",
+    "گل",
+    "درخت",
+    "ماه",
+    "خورشید",
+    "ستاره",
+    "پدر",
+    "مادر",
+    "برادر",
+    "خواهر",
+    "پسر",
+    "دختر",
+    "دوست",
+    "عمو",
+    "خاله",
+    "دایی",
+    "همسر",
+    "بچه",
+    "نوه",
+    "پدربزرگ",
+    "مادربزرگ",
+    "خوانواده",
+    "سفر",
+    "تعطیلات",
+    "کارت",
+    "پول",
+    "موزیک",
+    "فیلم",
+    "ورزش",
+    "بازی",
+    "هنر",
+    "آشپزی",
+    "عید",
+    "تولد",
+    "عروسی",
+    "جشن",
+    "هدیه",
+    "مهمان",
+    "سفارش",
+    "قرض",
+    "دفتر",
+    "قرار",
+    "نامه",
+    "پیام",
+    "سوال",
+    "جواب",
+    "نظر",
+    "احساس",
+    "رویا",
+    "امیر",
+    "حسین",
+    "حسن",
+    "رضا",
+    "انار"
+    ]
+
+    avg = 0
+    counter = 0 
+    
+    for input_str in persian_words:
+        counter += 1  
+        codes = {}
+        
+        freq = defaultdict(int) 
+        minHeap = []
+        encodedString, decodedString = "", ""
+        calcFreq(input_str, len(input_str))
+        HuffmanCodes(len(input_str))
+        
+        for key in sorted(codes):
+            print(f"{key}: {codes[key]}")
+        
+        for i in input_str:
+            encodedString += codes[i]
+            
+        
+        
+        decodedString = decode_file(minHeap[0], encodedString)
+        
+        compression_ratio = calculate_compression_ratio(input_str, encodedString)
+        cr = int(compression_ratio * 100)
+        avg += cr 
+
+        file = open("result.txt", "a")
+        content = str(encodedString) + " : " + str(decodedString) + " ratio " + " : " + str(cr) + "\n"
+        file.write(content)
+        print(counter)
+        from time import sleep 
+        sleep(0.2)
+        print(input_str)
+        if counter == 100: 
+            break
+
+    avg = avg / 100 
+    content = "total final average comperssion ratio:" + str(avg) + "\n"
+    file.write(content)
+    break
+
+
