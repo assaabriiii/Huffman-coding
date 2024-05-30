@@ -41,8 +41,11 @@ if __name__ == '__main__':
 
 ## Contact Information
 
-If you have any questions or suggestions regarding this code, feel free to reach out to me on Twitter:
-
-- Twitter: [@0x27752357](https://twitter.com/0x27752357)
-
 I'm not available to discuss any aspects related to Huffman encoding and decoding or etc topics.
+
+
+## Authors
+
+- Algorithm logic: [@kimiakeivan](https://github.com/kimiakeivan)
+- GUI design: [@assaabriiii](https://github.com/assaabriiii) 
+
